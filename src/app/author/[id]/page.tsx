@@ -1,13 +1,31 @@
 import { getUsers } from "@/app/actions/users"
 import { Mail, Phone, Globe, MapPin, Building } from "lucide-react"
+import { Metadata } from "next"
 
-interface Params {
-    id: string
+type Params = {
+    id: string;
   }
-export default async function AuthorPage({ params }: { params: Params }) {
+  
+  type Props = {
+    params: Params;
+    searchParams?: { [key: string]: string | string[] | undefined };
+  }
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const users = await getUsers()
+  const author = users.find((user: { id: number }) => user.id === parseInt(params.id))
+  
+  return {
+    title: author ? `${author.name} - Author Profile` : 'Author Profile',
+    description: author ? `Profile page for ${author.name}` : 'Author profile page',
+  }
+}
+
+  
+  export default async function AuthorPage({ params }: Props) {
     console.log(params)
 
-    
+
   const users = await getUsers()
   const author = users.find((user: { id: number }) => user.id === parseInt(params.id))
 
