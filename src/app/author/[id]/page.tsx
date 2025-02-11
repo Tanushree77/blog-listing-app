@@ -2,10 +2,12 @@ import { getUsers } from "@/app/actions/users"
 import { Mail, Phone, Globe, MapPin, Building } from "lucide-react"
 
 interface Params {
-  params: { id: string }
-}
+    id: string
+  }
+export default async function AuthorPage({ params }: { params: Params }) {
+    console.log(params)
 
-export default async function AuthorPage({ params }: Params) {
+    
   const users = await getUsers()
   const author = users.find((user: { id: number }) => user.id === parseInt(params.id))
 
