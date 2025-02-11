@@ -2,18 +2,15 @@ import { getUsers } from "@/app/actions/users"
 import { Mail, Phone, Globe, MapPin, Building } from "lucide-react"
 import { Metadata } from "next"
 
-type Params = {
-    id: string;
-  }
-  
-  type Props = {
-    params: Params;
-    searchParams?: { [key: string]: string | string[] | undefined };
-  }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}): Promise<Metadata> {
+  const id = (await params).id
   const users = await getUsers()
-  const author = users.find((user: { id: number }) => user.id === parseInt(params.id))
+  const author = users.find((user: { id: number }) => user.id === parseInt(id))
   
   return {
     title: author ? `${author.name} - Author Profile` : 'Author Profile',
@@ -21,13 +18,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-  
-  export default async function AuthorPage({ params }: Props) {
-    console.log(params)
-
-
+export default async function AuthorPage({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const id = (await params).id
   const users = await getUsers()
-  const author = users.find((user: { id: number }) => user.id === parseInt(params.id))
+  const author = users.find((user: { id: number }) => user.id === parseInt(id))
 
   if (!author) {
     return <div className="text-center text-gray-600">Author not found</div>
